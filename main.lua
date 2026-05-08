@@ -2,7 +2,7 @@ local Player = require('player')
 
 function love.load()
     wf = require "libraries/windfield" 
-
+    love.window.setMode(1920, 1080)
 
     world = wf.newWorld(0, 500)
     world:addCollisionClass("Ground")
