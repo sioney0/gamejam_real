@@ -1,38 +1,28 @@
-local world = love.physics.newWorld(0,0)
-
+local Player = require('player')
 
 function love.load()
-    player = {
-        x = 200,
-        y = 200
-    }
-    player.body = love.physics.newBody(world, player.x, player.y, "dynamic")
+    wf = require "libraries/windfield" 
 
 
+    world = wf.newWorld(0, 100)
+    ground = world:newRectangleCollider(100, 400, 600, 100)
+    ground:setType('static')
+
+    player_one = Player:new(world, 100, 100, 100)
 end
 
-
 function love.update(dt)
-    if love.keyboard.isDown("w") then 
-        player.y = player.y - speed*dt
-    end
+    
+    world:update(dt)
 
-    if love.keyboard.isDown("a") then 
-        player.x = player.x - speed*dt
-    end
-    if love.keyboard.isDown("s") then 
-        player.y = player.y + speed*dt
-    end
-    if love.keyboard.isDown("d") then 
-        player.x = player.x + speed*dt
-    end
-
-
-
-
-
+    player_one:update(dt)
 end
 
 function love.draw()
+    world:draw()
+
+    player_one:draw()
 
 end
+
+
