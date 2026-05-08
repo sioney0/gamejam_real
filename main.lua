@@ -23,12 +23,12 @@ function love.update(dt)
     
     world:update(dt)
 
-    player_one:update(dt)
-    player_two:update(dt)
+    player_one:update(dt, world, player_two)
+    player_two:update(dt, world, player_one)
 end
 
 function love.draw()
-    
+    world:draw()
 
     player_one:draw()
     player_two:draw()

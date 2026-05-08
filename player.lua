@@ -10,14 +10,13 @@ function Player:new(world, x_pos, y_pos, health, type)
         x = x_pos,
         y = y_pos,
         hp = health,
-        image = love.graphics.newImage('/sprites/Placeholder_Human.png'),
+        image = love.graphics.newImage('/sprites/Character.png'),
         direction = 1,
         canJump = true,
         player_number = type,
         
 
         isPunching = false,
-        punchTimer = 0,
         punchDuration = 0.15,
         punchCooldown = 0,
         punchCooldownTime = 0.4,
@@ -27,13 +26,21 @@ function Player:new(world, x_pos, y_pos, health, type)
     entity.collider = world:newRectangleCollider(x_pos, y_pos, 50, 80)
     entity.collider:setFixedRotation(true)
     
-   
     setmetatable(entity, Player)
 
     return entity
 end
 
 function Player:punch(world)
+    if self.punchCooldown > 0 then
+        return
+    end
+
+
+
+    self.punchHitbox = world:newRectangleCollider(self.x + 10 * self.direction, self.y, 20, 20)
+    self.punchHitbox:setType("static")
+    self.punchHitbox:setSensor(true)
 
     
 end
@@ -59,20 +66,32 @@ function movePlayer(p, leftKey, rightKey, upKey, downKey)
     end
 end
 
-function Player:update(dt)
+function Player:update(dt, world, opponent)
+    -- For moving
     if self.player_number == 1 then
         movePlayer(self, "left", "right", "up", "down")
     elseif self.player_number == 2 then
         movePlayer(self, "a", "d", "w", "s")
     end
 
-
-    if self.collider:enter("Ground") then
+        if self.collider:enter("Ground") then
         self.canJump = true
     end
 
+    -- For setting sprite always equal to collider position
     self.x = self.collider:getX()
     self.y = self.collider:getY()
+
+    -- For Punching
+    if self.player_number == 1 then
+        if love.keyboard.isDown('p') then
+            self:punch(world)
+        end
+    elseif self.player_number == 2 then
+        if love.keyboard.isDown('f') then
+            self:punch(world)
+        end
+    end
 end
 
 function Player:draw()
@@ -80,8 +99,10 @@ function Player:draw()
     local imgW = self.image:getWidth()
     local imgH = self.image:getHeight()
 
-    love.graphics.draw(self.image, self.x, self.y, 0, 5, 5,  imgW / 2,
+    love.graphics.draw(self.image, self.x, self.y, 0, 2, 2,  imgW / 2,
         imgH / 2)
+
+
 end
 
 return Player
