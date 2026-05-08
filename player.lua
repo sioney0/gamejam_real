@@ -53,11 +53,12 @@ function Player:update(dt)
 end
 
 function Player:draw()
-    local scale = 5
+    
     local imgW = self.image:getWidth()
     local imgH = self.image:getHeight()
 
-    love.graphics.draw(self.image, self.x, self.y, 0, 5, 5)
+    love.graphics.draw(self.image, self.x, self.y, 0, 5, 5,  imgW / 2,
+        imgH / 2)
 end
 
 return Player
