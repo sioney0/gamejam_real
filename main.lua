@@ -64,7 +64,7 @@ end
 function love.update(dt)
     
     
-    cam:move(0, -10 * dt)
+    cam:move(0, -5 * dt)
     
 
     player_one:update(dt, world, player_two, cam)
@@ -93,8 +93,6 @@ function love.draw()
 
     fog.animation.move:draw(fog.spriteSheet, fog.x, fog.y, 0, 4, 4)
         
-        
-    
 end
 
 
