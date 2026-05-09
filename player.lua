@@ -168,14 +168,6 @@ function Player:checkDeath(cam, gameState)
         end
     end
 
-    if self.hp <= 0  then
-        if self.player_number == 1 then
-            return "player2_win"
-        elseif self.player_number == 2 then
-            return "player1_win"
-        end
-    end
-
 end
 
 function Player:draw()
