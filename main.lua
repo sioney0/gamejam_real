@@ -76,10 +76,11 @@ function love.update(dt)
 end
 
 function love.draw()
+    gameMap:drawLayer(gameMap.layers["background"])
     cam:attach()
         love.graphics.push()
 
-        gameMap:drawLayer(gameMap.layers["background"])
+        
         gameMap:drawLayer(gameMap.layers["Collisions"])
         world:draw()
         
