@@ -2,7 +2,7 @@ local Player = require('player')
 
 function love.load()
     love.window.setMode(1280, 720)
-    
+    bigFont = love.graphics.newFont(48)
     wf = require "libraries/windfield" 
     sti = require "libraries/sti"
     camera = require "libraries/camera"
@@ -55,29 +55,46 @@ function love.load()
 
     player_one = Player:new(world, 100, 100, 100, 1)
     player_two = Player:new(world, 200, 200, 100, 2)
-    love.graphics.setBackgroundColor(0, 1, 0)
+    
 
     platform1 = love.graphics.newImage('/sprites/Platform1.png')
+
+    gameState = "menu"
 
 end
 
 function love.update(dt)
-    
-    
-    cam:move(0, -10 * dt)
-    
+        
+    function love.keypressed(key)
+        if gameState == "menu" then
+            gameState = "fighting"
+        end
+    end
 
-    player_one:update(dt, world, player_two)
-    player_two:update(dt, world, player_one)
+    if gameState == "fighting" then 
+    
+        cam:move(0, -10 * dt)
+        
 
-    world:update(dt)
+        player_one:update(dt, world, player_two)
+        player_two:update(dt, world, player_one)
 
+        world:update(dt)
+
+    end
+    
     fog.animation.move:update(dt)
 end
 
 function love.draw()
     gameMap:drawLayer(gameMap.layers["background"])
-    cam:attach()
+    if gameState == "menu" then
+    
+        love.graphics.setFont(bigFont)
+        love.graphics.printf("PRESS ANY KEY TO START", 0, 300, 1280, "center")
+    end
+    if gameState == "fighting" then
+        cam:attach()
         love.graphics.push()
 
         
@@ -87,14 +104,18 @@ function love.draw()
         player_one:draw()
         player_two:draw()
 
-    cam:detach()
+        cam:detach()
 
-    love.graphics.pop()
+        love.graphics.pop()
+
+    end
+
+
+   
 
     fog.animation.move:draw(fog.spriteSheet, fog.x, fog.y, 0, 4, 4)
         
         
-    
 end
 
 
