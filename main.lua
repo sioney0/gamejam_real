@@ -8,7 +8,7 @@ function love.load()
     camera = require "libraries/camera"
 
     cam = camera()
-    anim8 = require "libraries/anim8"
+    anim8 = require "libraries/anim8/anim8"
     world = wf.newWorld(0, 800)
     world:addCollisionClass("Ground")
 
