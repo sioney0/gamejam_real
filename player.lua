@@ -21,7 +21,7 @@ function Player:new(world, x_pos, y_pos, health, type)
         spawnY = y_pos,
 
         isPunching = false,
-        punchDuration = 0.4,
+        punchDuration = 0.15,
         punchCooldown = 0,
         punchHitbox = nil,
         alreadyHit = false,
@@ -53,6 +53,9 @@ function Player:punch(world)
     if self.punchCooldown > 0 or self.punchHitbox then
         return
     end
+
+    punchMissSFX:stop()
+    punchMissSFX:play()
 
     if self.direction == -1 then
         self.currentAnimation = self.punchAnimation
@@ -174,9 +177,13 @@ function Player:updatePunch(dt, world, opponent)
 
         for _, collider in ipairs(colliders) do --for loops and finds if the collider is the opponent's he gets punched
             if collider == opponent.collider and not self.alreadyHit then
+                punchHitSFX:stop()
+                punchHitSFX:play()
+
                 opponent.knockbackTimer = 0.2
                 opponent.collider:setLinearVelocity(500 * self.direction, -100)
                 self.alreadyHit = true
+                
             end
         end
         if self.punchDuration <= 0 then

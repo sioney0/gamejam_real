@@ -1,6 +1,15 @@
 local Player = require('player')
 
 function love.load()
+    punchHitSFX = love.audio.newSource("sounds/punchHit.wav", "static")
+    punchMissSFX = love.audio.newSource("sounds/punchMiss.wav", "static")
+    
+    bgm = love.audio.newSource("sounds/mainBGM.mp3", "stream")
+    bgm:setLooping(true)
+    bgm:setVolume(0.4)
+    punchMissSFX:setVolume(0.5)
+    punchHitSFX:setVolume(0.7)
+
     love.window.setMode(1280, 720)
     bigFont = love.graphics.newFont(48)
     wf = require "libraries/windfield" 
@@ -65,13 +74,17 @@ function love.load()
 
 end
 
-function love.update(dt)
-        
-    function love.keypressed(key)
-        if gameState == "menu" then
-            gameState = "fighting"
-        end
+      
+function love.keypressed(key)
+    if gameState == "menu" then
+        gameState = "fighting"
+        bgm:stop()
+        bgm:play()
     end
+end
+
+function love.update(dt)
+  
 
     if gameState == "fighting" then 
     
