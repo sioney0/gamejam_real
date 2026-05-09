@@ -15,8 +15,8 @@ function love.load()
     world:addCollisionClass("Player")
 
     gameMap = sti("maps/map14.lua")
-
     fog = {}
+    
     fog.spriteSheet = love.graphics.newImage('/sprites/fog.png')
     fog.grid = anim8.newGrid(
         320,
@@ -57,10 +57,11 @@ end
 
 function love.update(dt)
     
-    world:update(dt)
-
+    
     player_one:update(dt, world, player_two)
     player_two:update(dt, world, player_one)
+
+    world:update(dt)
 
     fog.animation.move:update(dt)
 end
