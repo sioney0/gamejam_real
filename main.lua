@@ -91,8 +91,8 @@ function love.update(dt)
         cam:move(0, -5 * dt)
         
 
-        player_one:update(dt, world, player_two, cam, gameState)
-        player_two:update(dt, world, player_one, cam, gameState)
+        player_one:update(dt, world, player_two, cam)
+        player_two:update(dt, world, player_one, cam)
 
         world:update(dt)
         if player_one.hp <= 0 then
@@ -113,6 +113,7 @@ function love.draw()
     
         love.graphics.setFont(bigFont)
         love.graphics.printf("PRESS ANY KEY TO START", 0, 300, 1280, "center")
+
     elseif gameState == "fighting" then
         cam:attach()
         love.graphics.push()
