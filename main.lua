@@ -21,12 +21,12 @@ function love.load()
     world = wf.newWorld(0, 800)
     world:addCollisionClass("Ground")
 
-    ground = world:newRectangleCollider(100, 400, 600, 100)
-    ground:setType('static')
-    ground:setCollisionClass("Ground")
     world:addCollisionClass("Player")
 
-    gameMap = sti("maps/map14.lua")
+    gameMap = sti("maps/map21.lua")
+    mapHeight = gameMap.height * gameMap.tileheight
+    cam = camera()
+    cam:lookAt(640, mapHeight - 360)
     fog = {}
     
     fog.spriteSheet = love.graphics.newImage('/sprites/fog2.png')
@@ -47,15 +47,16 @@ function love.load()
     if gameMap.layers["Collisions"] then
         for i, obj in pairs(gameMap.layers["Collisions"].objects) do
             
-    
-            local collider = world:newRectangleCollider(
-                obj.x,
-                obj.y - obj.height,
-                obj.width,
-                obj.height
-            )
-            collider:setType("static")
-            collider:setCollisionClass("Ground")
+            if obj.width > 0 and obj.height > 0 then
+                local collider = world:newRectangleCollider(
+                    obj.x,
+                    obj.y,
+                    obj.width,
+                    obj.height
+                )
+                collider:setType("static")
+                collider:setCollisionClass("Ground")
+            end
          
 
             table.insert(platforms, obj)
@@ -109,18 +110,19 @@ end
 
 function love.draw()
     gameMap:drawLayer(gameMap.layers["background"])
-    if gameState == "menu" then
     
+    if gameState == "menu" then
+        gameMap:draw()
         love.graphics.setFont(bigFont)
         love.graphics.printf("PRESS ANY KEY TO START", 0, 300, 1280, "center")
 
     elseif gameState == "fighting" then
         cam:attach()
         love.graphics.push()
-
         
-        gameMap:drawLayer(gameMap.layers["Collisions"])
-        world:draw()
+        gameMap:drawLayer(gameMap.layers["tiles"])
+        
+        
         
         player_one:draw()
         player_two:draw()
