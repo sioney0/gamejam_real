@@ -67,8 +67,8 @@ function love.load()
         end
     end
 
-    player_one = Player:new(world, 100, 100, 3, 1)
-    player_two = Player:new(world, 200, 200, 3, 2)
+    player_one = Player:new(world, 300, mapHeight - 200, 3, 1)
+    player_two = Player:new(world, 900, mapHeight - 200, 3, 2)
     love.graphics.setBackgroundColor(0, 1, 0)
 
     --ui

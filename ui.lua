@@ -7,8 +7,8 @@ function ui:new(p1, p2)
     local manager = {
         player_one = p1,
         player_two = p2,
-        blue_hearts = love.graphics.newImage('/sprites/player1_heart.png'),
-        red_hearts = love.graphics.newImage('/sprites/player2_heart.png')
+        blue_hearts = love.graphics.newImage('/sprites/player2_heart.png'),
+        red_hearts = love.graphics.newImage('/sprites/player1_heart.png')
     }
 
     setmetatable(manager, ui)
