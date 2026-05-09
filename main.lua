@@ -5,6 +5,7 @@ function love.load()
 
     wf = require "libraries/windfield" 
     sti = require "libraries/sti"
+    anim8 = require "anim8/anim8"
     world = wf.newWorld(0, 600)
     world:addCollisionClass("Ground")
     ground = world:newRectangleCollider(100, 400, 600, 100)
@@ -14,7 +15,20 @@ function love.load()
 
     gameMap = sti("maps/map14.lua")
 
-    
+    fog = {}
+    fog.spriteSheet = love.graphics.newImage('/sprites/fog.png')
+    fog.grid = anim8.newGrid(
+        320,
+        32,
+        fog.spriteSheet:getWidth(),
+        fog.spriteSheet:getHeight()
+    )
+    fog.animation = {}
+    fog.animation.move = anim8.newAnimation(fog.grid(1, '1-2'),1)
+
+    fog.x = 0
+    fog.y = 620
+
      -- create colliders from Tiled object layer
     if gameMap.layers["Collisions"] then
         for i, obj in pairs(gameMap.layers["Collisions"].objects) do
@@ -36,6 +50,7 @@ function love.load()
 
     platform1 = love.graphics.newImage('/sprites/Platform1.png')
 
+
     
 end
 
@@ -45,6 +60,8 @@ function love.update(dt)
 
     player_one:update(dt, world, player_two)
     player_two:update(dt, world, player_one)
+
+    fog.animation.move:update(dt)
 end
 
 function love.draw()
@@ -55,6 +72,9 @@ function love.draw()
     player_two:draw()
 
     love.graphics.draw(platform1, 100, 400, 0, 12, 6)
+
+    fog.animation.move:draw(fog.spriteSheet, fog.x, fog.y, 0, 4, 4)
 end
+
 
 
