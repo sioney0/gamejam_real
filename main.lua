@@ -2,10 +2,12 @@ local Player = require('player')
 
 function love.load()
     love.window.setMode(1280, 720)
-
+    
     wf = require "libraries/windfield" 
     sti = require "libraries/sti"
+    camera = require "libraries/camera"
 
+    cam = camera()
     world = wf.newWorld(0, 800)
 
     world:addCollisionClass("Ground")
@@ -21,15 +23,24 @@ function love.load()
      -- create colliders from Tiled object layer
     if gameMap.layers["Collisions"] then
         for i, obj in pairs(gameMap.layers["Collisions"].objects) do
-            local collider = world:newRectangleCollider(
+            
+            local platform = {
+            x = obj.x,
+            y = obj.y,
+            width = obj.width,
+            height = obj.height,
+            image = love.graphics.newImage("sprites/Platform1.png")
+            }
+            
+            platform.collider = world:newRectangleCollider(
                 obj.x,
                 obj.y - obj.height,
                 obj.width,
                 obj.height
             )
-
-            collider:setType("static")
-            collider:setCollisionClass("Ground")
+            platform.collider:setType("static")
+            platform.collider:setCollisionClass("Ground")
+         
         end
     end
 
@@ -39,11 +50,10 @@ function love.load()
 
     platform1 = love.graphics.newImage('/sprites/Platform1.png')
 
-    
 end
 
 function love.update(dt)
-    
+    cam:move(0, -100 * dt)
     world:update(dt)
 
     player_one:update(dt, world, player_two)
@@ -51,13 +61,19 @@ function love.update(dt)
 end
 
 function love.draw()
-    gameMap:draw()
-    world:draw()
-    
-    player_one:draw()
-    player_two:draw()
+    cam:attach()
+        love.graphics.push()
 
-    love.graphics.draw(platform1, 100, 400, 0, 12, 6)
+        gameMap:drawLayer(gameMap.layers["background"])
+        gameMap:drawLayer(gameMap.layers["Collisions"])
+        world:draw()
+        
+        player_one:draw()
+        player_two:draw()
+
+        love.graphics.draw(platform1, 100, 400, 0, 12, 6)
+        love.graphics.pop()
+    cam:detach()
 end
 
 

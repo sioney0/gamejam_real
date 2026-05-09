@@ -29,7 +29,7 @@ function Player:new(world, x_pos, y_pos, health, type)
     entity.collider:setFixedRotation(true)
     entity.collider:setCollisionClass("Player")
     setmetatable(entity, Player)
-
+    
     return entity
 end
 
