@@ -38,7 +38,7 @@ function Player:punch(world)
     if self.punchCooldown > 0 or self.punchHitbox then
         return
     end
-  
+
     local hitboxX
     local punchWidth = 35
 
@@ -54,7 +54,7 @@ function Player:punch(world)
     self.punchHitbox:setType("static")
     self.punchHitbox:setSensor(true)
     self.alreadyHit = false
- 
+    
 end
 
 function movePlayer(p, leftKey, rightKey, upKey, downKey) 
@@ -85,7 +85,7 @@ function Player:update(dt, world, opponent)
         movePlayer(self, "a", "d", "w", "s")
     end
 
-    if self.collider:enter("Ground") then
+        if self.collider:enter("Ground") then
         self.canJump = true
     end
 
@@ -103,7 +103,12 @@ function Player:update(dt, world, opponent)
             self:punch(world)
         end
     end
+    
+    self:updatePunch(dt, world, opponent)
+    
+end
 
+function Player:updatePunch(dt, world, opponent)
     if self.punchHitbox then
         self.punchDuration = self.punchDuration - dt
         local hitboxX = self.punchHitbox:getX()
@@ -138,7 +143,7 @@ function Player:draw()
 
     love.graphics.draw(self.image, self.x, self.y, 0, 2 * self.direction, 2,  imgW / 2,
         imgH / 2)
-    
+
 end
 
 return Player
