@@ -1,14 +1,18 @@
 local Player = require('player')
+local Ui = require('ui')
 
 function love.load()
     punchHitSFX = love.audio.newSource("sounds/punchHit.wav", "static")
     punchMissSFX = love.audio.newSource("sounds/punchMiss.wav", "static")
     
+    --audio
     bgm = love.audio.newSource("sounds/mainBGM.mp3", "stream")
     bgm:setLooping(true)
     bgm:setVolume(0.4)
     punchMissSFX:setVolume(0.5)
     punchHitSFX:setVolume(0.7)
+
+    
 
     love.window.setMode(1280, 720)
     bigFont = love.graphics.newFont(48)
@@ -65,6 +69,9 @@ function love.load()
     player_one = Player:new(world, 100, 100, 3, 1)
     player_two = Player:new(world, 200, 200, 3, 2)
     love.graphics.setBackgroundColor(0, 1, 0)
+
+    --ui
+    UImanager = ui:new(player_one, player_two)
 
     platform1 = love.graphics.newImage('/sprites/Platform1.png')
 
@@ -135,10 +142,11 @@ function love.draw()
         love.graphics.setFont(bigFont)
         love.graphics.printf("PLAYER 2 WIN", 0, 300, 1280, "center")
         
-
     end
     
     fog.animation.move:draw(fog.spriteSheet, fog.x, fog.y, 0, 4, 4)
+
+    UImanager:draw()
         
 end
 

@@ -12,6 +12,7 @@ function Player:new(world, x_pos, y_pos, health, type)
         y = y_pos,
         hp = health,
         spriteSheet = love.graphics.newImage('/sprites/punch_animation_sheet.png'),
+        runSheet = love.graphics.newImage('/sprites/run_animation.png'),
         direction = 1,
         canJump = true,
         player_number = type,
@@ -43,20 +44,26 @@ function Player:new(world, x_pos, y_pos, health, type)
     )
     
     if entity.player_number == 1 then
+
         entity.LeftIdleAnimation = anim8.newAnimation(entity.grid(1, 1), 0.2)
         entity.RightIdleAnimation = anim8.newAnimation(entity.grid(1, 2), 0.2)
         entity.LeftpunchAnimation = anim8.newAnimation(entity.grid('2-3', 1), 0.1)
         entity.RightPunchAnimation = anim8.newAnimation(entity.grid('2-3', 2), 0.1)
+        entity.RunLeftAnimation = anim8.newAnimation(entity.grid('2-3', 2), 0.05)
+        entity.RunLeftAnimation = anim8.newAnimation(entity.grid('2-3', 1), 0.05)
         entity.currentAnimation = entity.RightIdleAnimation
+
     elseif entity.player_number == 2 then
+
         entity.LeftIdleAnimation = anim8.newAnimation(entity.grid(1, 3), 0.2)
         entity.RightIdleAnimation = anim8.newAnimation(entity.grid(1, 4), 0.2)
         entity.LeftpunchAnimation = anim8.newAnimation(entity.grid('2-3', 3), 0.1)
         entity.RightPunchAnimation = anim8.newAnimation(entity.grid('2-3', 4), 0.1)
+        entity.RunLeftAnimation = anim8.newAnimation(entity.grid('2-3', 3), 0.05)
+        entity.RunLeftAnimation = anim8.newAnimation(entity.grid('2-3', 4), 0.05)
+        entity.direction = -1
         entity.currentAnimation = entity.LeftIdleAnimation
     end
-
-    
 
     return entity
 end
@@ -79,10 +86,7 @@ function Player:punch(world)
     end
     
     self.punchStartup = 0.08
-    self.punchCooldown = 1
-
-    
-    
+    self.punchCooldown = 1 
 end
 
 function movePlayer(p, leftKey, rightKey, upKey, downKey) 
