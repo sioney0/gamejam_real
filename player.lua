@@ -124,7 +124,7 @@ function movePlayer(p, leftKey, rightKey, upKey, downKey)
     end
 
     if love.keyboard.isDown(upKey) and py > -200 and p.canJump and p.jumpcooldown <= 0 then
-        p.collider:applyLinearImpulse(0, -1600)
+        p.collider:applyLinearImpulse(0, -2500)
         p.canJump = false
         p.jumpcooldown = 0.5
     end

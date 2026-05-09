@@ -27,7 +27,7 @@ function love.load()
 
     world:addCollisionClass("Player")
 
-    gameMap = sti("maps/map21.lua")
+    gameMap = sti("maps/map24.lua")
     mapHeight = gameMap.height * gameMap.tileheight
     cam = camera()
     cam:lookAt(640, mapHeight - 360)
