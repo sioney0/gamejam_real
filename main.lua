@@ -1,6 +1,8 @@
 local Player = require('player')
 
 function love.load()
+    love.window.setMode(1280, 720)
+
     wf = require "libraries/windfield" 
     sti = require "libraries/sti"
     world = wf.newWorld(0, 600)
@@ -17,8 +19,8 @@ function love.load()
     if gameMap.layers["Collisions"] then
         for i, obj in pairs(gameMap.layers["Collisions"].objects) do
             local collider = world:newRectangleCollider(
-                obj.x + obj.width / 2,
-                obj.y + obj.height / 2,
+                obj.x,
+                obj.y - obj.height,
                 obj.width,
                 obj.height
             )
@@ -34,7 +36,7 @@ function love.load()
 
     platform1 = love.graphics.newImage('/sprites/Platform1.png')
 
-    love.window.setMode(1280, 720)
+    
 end
 
 function love.update(dt)
@@ -46,8 +48,9 @@ function love.update(dt)
 end
 
 function love.draw()
-    world:draw()
     gameMap:draw()
+    world:draw()
+    
     player_one:draw()
     player_two:draw()
 

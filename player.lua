@@ -16,13 +16,13 @@ function Player:new(world, x_pos, y_pos, health, type)
         player_number = type,
         width = 50,
         height = 80,
-        
 
         isPunching = false,
         punchDuration = 0.4,
         punchCooldown = 0,
         punchHitbox = nil,
-        alreadyHit = false
+        alreadyHit = false,
+        jumpcooldown = 0.5
     }
    
     entity.collider = world:newRectangleCollider(x_pos, y_pos, 50, 80)
@@ -54,7 +54,7 @@ function Player:punch(world)
     self.punchHitbox:setSensor(true)
     self.alreadyHit = false
 
-    self.punchCooldown = 2
+    self.punchCooldown = 1
     
 end
 
@@ -86,7 +86,7 @@ function Player:update(dt, world, opponent)
         movePlayer(self, "a", "d", "w", "s")
     end
 
-        if self.collider:enter("Ground") then
+    if self.collider:enter("Ground") or self.collider:enter("Player")then
         self.canJump = true
     end
 
@@ -129,7 +129,7 @@ function Player:updatePunch(dt, world, opponent)
 
         for _, collider in ipairs(colliders) do --for loops and finds if the collider is the opponent's he gets punched
             if collider == opponent.collider and not self.alreadyHit then
-                opponent.collider:setLinearVelocity(1500 * self.direction, -100)
+                opponent.collider:setLinearVelocity(750 * self.direction, -100)
                 self.alreadyHit = true
             end
         end
