@@ -40,13 +40,17 @@ function Player:new(world, x_pos, y_pos, health, type)
     entity.grid = anim8.newGrid(
         64, 48, 
         entity.spriteSheet:getWidth(),
-        entity.spriteSheet:getHeight()
+        entity.spriteSheet:getHeight(),
+        0,
+        1
     )
 
     entity.runGrid = anim8.newGrid(
         60, 48,
         entity.runSheet:getWidth(),
-        entity.runSheet:getHeight()
+        entity.runSheet:getHeight(),
+        0,
+        2
     )
     
     if entity.player_number == 1 then
@@ -288,9 +292,11 @@ function Player:updatePunch(dt, world, opponent)
 end
 
 function Player:checkDeath(cam, gameState)
-    local voidY = cam.y + love.graphics.getHeight() / 2 + 100
+    local voidY = cam.y + love.graphics.getHeight() / 2
 
-    if self.y > voidY then self.hp = self.hp - 1
+    if self.y > voidY then 
+        
+        self.hp = self.hp - 1
 
         if self.hp > 0 then
             self.collider:setPosition(self.spawnX, self.spawnY)
