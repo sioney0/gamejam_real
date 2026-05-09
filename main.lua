@@ -53,8 +53,8 @@ function love.load()
         end
     end
 
-    player_one = Player:new(world, 100, 100, 100, 1)
-    player_two = Player:new(world, 200, 200, 100, 2)
+    player_one = Player:new(world, 100, 100, 3, 1)
+    player_two = Player:new(world, 200, 200, 3, 2)
     love.graphics.setBackgroundColor(0, 1, 0)
 
     platform1 = love.graphics.newImage('/sprites/Platform1.png')
@@ -67,8 +67,8 @@ function love.update(dt)
     cam:move(0, -10 * dt)
     
 
-    player_one:update(dt, world, player_two)
-    player_two:update(dt, world, player_one)
+    player_one:update(dt, world, player_two, cam)
+    player_two:update(dt, world, player_one, cam)
 
     world:update(dt)
 
