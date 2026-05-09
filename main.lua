@@ -86,12 +86,14 @@ function love.draw()
         player_one:draw()
         player_two:draw()
 
-    love.graphics.draw(platform1, 100, 400, 0, 12, 6)
+    cam:detach()
+
+    love.graphics.pop()
 
     fog.animation.move:draw(fog.spriteSheet, fog.x, fog.y, 0, 4, 4)
-        love.graphics.draw(platform1, 100, 400, 0, 12, 6)
-        love.graphics.pop()
-    cam:detach()
+        
+        
+    
 end
 
 
