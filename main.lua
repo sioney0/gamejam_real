@@ -20,7 +20,7 @@ function love.load()
     gameMap = sti("maps/map14.lua")
     fog = {}
     
-    fog.spriteSheet = love.graphics.newImage('/sprites/fog.png')
+    fog.spriteSheet = love.graphics.newImage('/sprites/fog2.png')
     fog.grid = anim8.newGrid(
         320,
         32,
@@ -28,7 +28,7 @@ function love.load()
         fog.spriteSheet:getHeight()
     )
     fog.animation = {}
-    fog.animation.move = anim8.newAnimation(fog.grid(1, '1-2'),1)
+    fog.animation.move = anim8.newAnimation(fog.grid(1, '2-4'),0.3)
 
     fog.x = 0
     fog.y = 620
@@ -53,9 +53,9 @@ function love.load()
         end
     end
 
-    player_one = Player:new(world, 100, 100, 100, 1)
-    player_two = Player:new(world, 200, 200, 100, 2)
-    
+    player_one = Player:new(world, 100, 100, 3, 1)
+    player_two = Player:new(world, 200, 200, 3, 2)
+    love.graphics.setBackgroundColor(0, 1, 0)
 
     platform1 = love.graphics.newImage('/sprites/Platform1.png')
 
@@ -76,8 +76,8 @@ function love.update(dt)
         cam:move(0, -10 * dt)
         
 
-        player_one:update(dt, world, player_two)
-        player_two:update(dt, world, player_one)
+    player_one:update(dt, world, player_two, cam)
+    player_two:update(dt, world, player_one, cam)
 
         world:update(dt)
 
