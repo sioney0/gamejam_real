@@ -65,15 +65,13 @@ function love.load()
 
 end
 
-      
-function love.keypressed(key)
-    if gameState == "menu" then
-        gameState = "fighting"
-    end
-end
-
 function love.update(dt)
-  
+        
+    function love.keypressed(key)
+        if gameState == "menu" then
+            gameState = "fighting"
+        end
+    end
 
     if gameState == "fighting" then 
     
@@ -129,8 +127,6 @@ function love.draw()
 
     end
     
-   
-
     fog.animation.move:draw(fog.spriteSheet, fog.x, fog.y, 0, 4, 4)
         
 end
