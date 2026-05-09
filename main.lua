@@ -31,6 +31,7 @@ function love.load()
     fog.y = 620
 
      -- create colliders from Tiled object layer
+    platforms = {}
     if gameMap.layers["Collisions"] then
         for i, obj in pairs(gameMap.layers["Collisions"].objects) do
             local collider = world:newRectangleCollider(
@@ -42,6 +43,8 @@ function love.load()
 
             collider:setType("static")
             collider:setCollisionClass("Ground")
+
+            table.insert(platforms, obj)
         end
     end
 
@@ -51,8 +54,6 @@ function love.load()
 
     platform1 = love.graphics.newImage('/sprites/Platform1.png')
 
-
-    
 end
 
 function love.update(dt)
