@@ -22,6 +22,7 @@ function Player:new(world, x_pos, y_pos, health, type)
         punchCooldown = 0,
         punchHitbox = nil,
         alreadyHit = false,
+        knockbackTimer = 0,
         jumpcooldown = 0
     }
    
@@ -84,6 +85,15 @@ function Player:update(dt, world, opponent)
         self.jumpcooldown = self.jumpcooldown - dt
     end
 
+    if self.knockbackTimer > 0 then
+        self.knockbackTimer = self.knockbackTimer - dt
+
+        self.x = self.collider:getX()
+        self.y = self.collider:getY()
+
+        return
+    end
+
     -- For moving
     if self.player_number == 1 then
         movePlayer(self, "left", "right", "up", "down")
@@ -134,7 +144,8 @@ function Player:updatePunch(dt, world, opponent)
 
         for _, collider in ipairs(colliders) do --for loops and finds if the collider is the opponent's he gets punched
             if collider == opponent.collider and not self.alreadyHit then
-                opponent.collider:setLinearVelocity(750 * self.direction, -100)
+                opponent.knockbackTimer = 0.2
+                opponent.collider:setLinearVelocity(400 * self.direction, -100)
                 self.alreadyHit = true
             end
         end
