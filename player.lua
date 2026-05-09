@@ -2,6 +2,7 @@ Player = {}
 Player.__index = Player
 
 local wf = require "libraries/windfield"
+local anim8 = require "libraries/anim8"
 
 
 function Player:new(world, x_pos, y_pos, health, type)
@@ -10,12 +11,12 @@ function Player:new(world, x_pos, y_pos, health, type)
         x = x_pos,
         y = y_pos,
         hp = health,
-        image = love.graphics.newImage('/sprites/Character.png'),
+        spriteSheet = love.graphics.newImage('/sprites/punchleft_animation_sheet.png'),
         direction = 1,
         canJump = true,
         player_number = type,
-        width = 50,
-        height = 80,
+        width = 32,
+        height = 48,
         spawnX = x_pos,
         spawnY = y_pos,
 
@@ -31,12 +32,22 @@ function Player:new(world, x_pos, y_pos, health, type)
     entity.collider = world:newRectangleCollider(x_pos, y_pos, 45, 80)
     entity.collider:setFixedRotation(true)
     entity.collider:setCollisionClass("Player")
+
     setmetatable(entity, Player)
-    
+
+    entity.grid = anim8.newGrid(
+        32, 48, 
+        entity.spriteSheet:getWidth(),
+        entity.spriteSheet:getHeight()
+    )
+
+    entity.idleAnimation = anim8.newAnimation(entity.grid(1, 1), 0.2)
+    entity.punchAnimation = anim8.newAnimation(entity.grid('2-3', 1), 0.15)
+
+    entity.currentAnimation = entity.idleAnimation
+
     return entity
 end
-
-
 
 function Player:punch(world)
     if self.punchCooldown > 0 or self.punchHitbox then
@@ -46,18 +57,23 @@ function Player:punch(world)
     punchMissSFX:stop()
     punchMissSFX:play()
 
+    if self.direction == -1 then
+        self.currentAnimation = self.punchAnimation
+        self.punchAnimation:gotoFrame(1)
+    end
+
     local hitboxX
     local punchWidth = 35
 
     if self.direction == 1 then
         -- facing right start at right edge of player
-        hitboxX = self.x + self.width / 2
+        hitboxX = self.x + self.width / 2 + 6
     else
         -- facing left put hitbox to left of player
-        hitboxX = self.x - self.width / 2 - punchWidth
+        hitboxX = self.x - self.width / 2 - punchWidth - 6
     end
 
-    self.punchHitbox = world:newRectangleCollider(hitboxX, self.y - 40, punchWidth, self.height) 
+    self.punchHitbox = world:newRectangleCollider(hitboxX, self.y - 35, punchWidth, self.height + 5) 
     self.punchHitbox:setType("static")
     self.punchHitbox:setSensor(true)
     self.alreadyHit = false
@@ -90,6 +106,8 @@ end
 function Player:update(dt, world, opponent, cam)
 
     self:checkDeath(cam)
+
+    self.currentAnimation:update(dt)
     
     if self.jumpcooldown > 0 then
         self.jumpcooldown = self.jumpcooldown - dt
@@ -99,7 +117,7 @@ function Player:update(dt, world, opponent, cam)
         self.knockbackTimer = self.knockbackTimer - dt
 
         self.x = self.collider:getX()
-        self.y = self.collider:getY()
+        self.y = self.collider:getY() - 10
 
         return
     end
@@ -127,7 +145,7 @@ function Player:update(dt, world, opponent, cam)
 
     -- For setting sprite always equal to collider position
     self.x = self.collider:getX()
-    self.y = self.collider:getY()
+    self.y = self.collider:getY() - 10
 
     -- For Punching
     if self.punchCooldown > 0 then
@@ -142,14 +160,12 @@ function Player:update(dt, world, opponent, cam)
 end
 
 function Player:updatePunch(dt, world, opponent)
+
     if self.punchHitbox then
         self.punchDuration = self.punchDuration - dt
+
         local hitboxX = self.punchHitbox:getX()
         local hitboxY = self.punchHitbox:getY()
-
-
-
-
 
         local colliders = world:queryRectangleArea( -- find any colliders of class "Player" in this rectangle hitbox.
             hitboxX - 35 / 2,
@@ -165,7 +181,7 @@ function Player:updatePunch(dt, world, opponent)
                 punchHitSFX:play()
 
                 opponent.knockbackTimer = 0.2
-                opponent.collider:setLinearVelocity(600 * self.direction, -100)
+                opponent.collider:setLinearVelocity(500 * self.direction, -100)
                 self.alreadyHit = true
                 
             end
@@ -174,7 +190,10 @@ function Player:updatePunch(dt, world, opponent)
                 self.punchHitbox:destroy()
                 self.punchHitbox = nil
                 self.punchDuration = 0.4
-            end
+
+                self.currentAnimation = self.idleAnimation
+                self.punchAnimation:gotoFrame(1)
+        end
     end
 end
 
@@ -194,12 +213,18 @@ function Player:checkDeath(cam, gameState)
 end
 
 function Player:draw()
-    
-    local imgW = self.image:getWidth()
-    local imgH = self.image:getHeight()
+    -- local imgW = self.image:getWidth() local imgH = self.image:getHeight()
 
-    love.graphics.draw(self.image, self.x, self.y, 0, 2 * self.direction, 2,  imgW / 2,
-        imgH / 2)
+    self.currentAnimation:draw(
+        self.spriteSheet,
+        self.x,
+        self.y,
+        0,
+        1.5 * -1 * self.direction,
+        1.5,
+        16,
+        16
+    )
 
 end
 

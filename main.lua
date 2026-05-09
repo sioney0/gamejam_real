@@ -140,8 +140,6 @@ function love.draw()
 
     end
     
-   
-
     fog.animation.move:draw(fog.spriteSheet, fog.x, fog.y, 0, 4, 4)
         
 end
