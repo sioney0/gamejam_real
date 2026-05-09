@@ -2,10 +2,13 @@ local Player = require('player')
 
 function love.load()
     love.window.setMode(1280, 720)
-
+    
     wf = require "libraries/windfield" 
     sti = require "libraries/sti"
-    anim8 = require "libraries/anim8/anim8"
+    camera = require "libraries/camera"
+
+    cam = camera()
+    anim8 = require "libraries/anim8"
     world = wf.newWorld(0, 800)
     world:addCollisionClass("Ground")
 
@@ -31,35 +34,41 @@ function love.load()
     fog.y = 620
 
      -- create colliders from Tiled object layer
+    platforms = {}
     if gameMap.layers["Collisions"] then
         for i, obj in pairs(gameMap.layers["Collisions"].objects) do
+            
+    
             local collider = world:newRectangleCollider(
                 obj.x,
                 obj.y - obj.height,
                 obj.width,
                 obj.height
             )
-
             collider:setType("static")
             collider:setCollisionClass("Ground")
+         
+
+            table.insert(platforms, obj)
         end
     end
 
-    player_one = Player:new(world, 100, 100, 100, 1)
-    player_two = Player:new(world, 200, 200, 100, 2)
+    player_one = Player:new(world, 100, 100, 3, 1)
+    player_two = Player:new(world, 200, 200, 3, 2)
     love.graphics.setBackgroundColor(0, 1, 0)
 
     platform1 = love.graphics.newImage('/sprites/Platform1.png')
 
-
-    
 end
 
 function love.update(dt)
     
     
-    player_one:update(dt, world, player_two)
-    player_two:update(dt, world, player_one)
+    cam:move(0, -10 * dt)
+    
+
+    player_one:update(dt, world, player_two, cam)
+    player_two:update(dt, world, player_one, cam)
 
     world:update(dt)
 
@@ -67,15 +76,25 @@ function love.update(dt)
 end
 
 function love.draw()
-    gameMap:draw()
-    world:draw()
-    
-    player_one:draw()
-    player_two:draw()
+    gameMap:drawLayer(gameMap.layers["background"])
+    cam:attach()
+        love.graphics.push()
 
-    love.graphics.draw(platform1, 100, 400, 0, 12, 6)
+        
+        gameMap:drawLayer(gameMap.layers["Collisions"])
+        world:draw()
+        
+        player_one:draw()
+        player_two:draw()
+
+    cam:detach()
+
+    love.graphics.pop()
 
     fog.animation.move:draw(fog.spriteSheet, fog.x, fog.y, 0, 4, 4)
+        
+        
+    
 end
 
 

@@ -16,12 +16,15 @@ function Player:new(world, x_pos, y_pos, health, type)
         player_number = type,
         width = 50,
         height = 80,
+        spawnX = x_pos,
+        spawnY = y_pos,
 
         isPunching = false,
         punchDuration = 0.4,
         punchCooldown = 0,
         punchHitbox = nil,
         alreadyHit = false,
+        knockbackTimer = 0,
         jumpcooldown = 0
     }
    
@@ -29,7 +32,7 @@ function Player:new(world, x_pos, y_pos, health, type)
     entity.collider:setFixedRotation(true)
     entity.collider:setCollisionClass("Player")
     setmetatable(entity, Player)
-
+    
     return entity
 end
 
@@ -79,9 +82,21 @@ function movePlayer(p, leftKey, rightKey, upKey, downKey)
     end
 end
 
-function Player:update(dt, world, opponent)
+function Player:update(dt, world, opponent, cam)
+
+    self:checkDeath(cam)
+    
     if self.jumpcooldown > 0 then
         self.jumpcooldown = self.jumpcooldown - dt
+    end
+
+    if self.knockbackTimer > 0 then
+        self.knockbackTimer = self.knockbackTimer - dt
+
+        self.x = self.collider:getX()
+        self.y = self.collider:getY()
+
+        return
     end
 
     -- For moving
@@ -134,7 +149,8 @@ function Player:updatePunch(dt, world, opponent)
 
         for _, collider in ipairs(colliders) do --for loops and finds if the collider is the opponent's he gets punched
             if collider == opponent.collider and not self.alreadyHit then
-                opponent.collider:setLinearVelocity(750 * self.direction, -100)
+                opponent.knockbackTimer = 0.2
+                opponent.collider:setLinearVelocity(400 * self.direction, -100)
                 self.alreadyHit = true
             end
         end
@@ -143,6 +159,18 @@ function Player:updatePunch(dt, world, opponent)
                 self.punchHitbox = nil
                 self.punchDuration = 0.4
             end
+    end
+end
+
+function Player:checkDeath(cam)
+    local voidY = cam.y + love.graphics.getHeight() / 2 + 100
+
+    if self.y > voidY then self.hp = self.hp - 1
+
+        if self.hp > 0 then
+            self.collider:setPosition(self.spawnX, self.spawnY)
+            self.collider:setLinearVelocity(0, 0)
+        end
     end
 end
 
