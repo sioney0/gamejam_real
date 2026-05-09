@@ -22,10 +22,10 @@ function Player:new(world, x_pos, y_pos, health, type)
         punchCooldown = 0,
         punchHitbox = nil,
         alreadyHit = false,
-        jumpcooldown = 0.5
+        jumpcooldown = 0
     }
    
-    entity.collider = world:newRectangleCollider(x_pos, y_pos, 50, 80)
+    entity.collider = world:newRectangleCollider(x_pos, y_pos, 45, 80)
     entity.collider:setFixedRotation(true)
     entity.collider:setCollisionClass("Player")
     setmetatable(entity, Player)
@@ -72,13 +72,18 @@ function movePlayer(p, leftKey, rightKey, upKey, downKey)
          p.collider:setLinearVelocity(px * 0.8, py)
     end
 
-    if love.keyboard.isDown(upKey) and py > -200 and p.canJump then
+    if love.keyboard.isDown(upKey) and py > -200 and p.canJump and p.jumpcooldown <= 0 then
         p.collider:applyLinearImpulse(0, -3000)
         p.canJump = false
+        p.jumpcooldown = 0.5
     end
 end
 
 function Player:update(dt, world, opponent)
+    if self.jumpcooldown > 0 then
+        self.jumpcooldown = self.jumpcooldown - dt
+    end
+
     -- For moving
     if self.player_number == 1 then
         movePlayer(self, "left", "right", "up", "down")
