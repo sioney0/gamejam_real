@@ -40,13 +40,17 @@ function Player:new(world, x_pos, y_pos, health, type)
     entity.grid = anim8.newGrid(
         64, 48, 
         entity.spriteSheet:getWidth(),
-        entity.spriteSheet:getHeight()
+        entity.spriteSheet:getHeight(),
+        0,
+        1
     )
 
     entity.runGrid = anim8.newGrid(
         60, 48,
         entity.runSheet:getWidth(),
-        entity.runSheet:getHeight()
+        entity.runSheet:getHeight(),
+        0,
+        2
     )
     
     if entity.player_number == 1 then
