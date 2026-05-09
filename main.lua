@@ -61,6 +61,8 @@ function love.load()
 
     gameState = "menu"
 
+    
+
 end
 
 function love.update(dt)
@@ -73,16 +75,22 @@ function love.update(dt)
 
     if gameState == "fighting" then 
     
-    cam:move(0, -5 * dt)
-    
+        cam:move(0, -5 * dt)
+        
 
-    player_one:update(dt, world, player_two, cam)
-    player_two:update(dt, world, player_one, cam)
+        player_one:update(dt, world, player_two, cam, gameState)
+        player_two:update(dt, world, player_one, cam, gameState)
 
         world:update(dt)
-
+        if player_one.hp <= 0 then
+            gameState = "player2_win"
+        elseif player_two.hp <= 0 then
+            gameState = "player1_win"
+        end
     end
     
+    
+
     fog.animation.move:update(dt)
 end
 
@@ -92,8 +100,7 @@ function love.draw()
     
         love.graphics.setFont(bigFont)
         love.graphics.printf("PRESS ANY KEY TO START", 0, 300, 1280, "center")
-    end
-    if gameState == "fighting" then
+    elseif gameState == "fighting" then
         cam:attach()
         love.graphics.push()
 
@@ -108,9 +115,17 @@ function love.draw()
 
         love.graphics.pop()
 
+    elseif gameState == "player1_win" then
+        love.graphics.setFont(bigFont)
+        love.graphics.printf("PLAYER 1 WIN", 0, 300, 1280, "center")
+       
+    elseif gameState == "player2_win" then 
+        love.graphics.setFont(bigFont)
+        love.graphics.printf("PLAYER 2 WIN", 0, 300, 1280, "center")
+        
+
     end
-
-
+    
    
 
     fog.animation.move:draw(fog.spriteSheet, fog.x, fog.y, 0, 4, 4)

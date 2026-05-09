@@ -36,6 +36,8 @@ function Player:new(world, x_pos, y_pos, health, type)
     return entity
 end
 
+
+
 function Player:punch(world)
     if self.punchCooldown > 0 or self.punchHitbox then
         return
@@ -82,9 +84,9 @@ function movePlayer(p, leftKey, rightKey, upKey, downKey)
     end
 end
 
-function Player:update(dt, world, opponent, cam)
+function Player:update(dt, world, opponent, cam, gameState)
 
-    self:checkDeath(cam)
+    self:checkDeath(cam, gameState)
     
     if self.jumpcooldown > 0 then
         self.jumpcooldown = self.jumpcooldown - dt
@@ -119,17 +121,10 @@ function Player:update(dt, world, opponent, cam)
         self.punchCooldown = self.punchCooldown - dt
     end
 
-    if self.player_number == 1 then
-        if love.keyboard.isDown('p') then
-            self:punch(world)
-        end
-    elseif self.player_number == 2 then
-        if love.keyboard.isDown('f') then
-            self:punch(world)
-        end
-    end
+    
     
     self:updatePunch(dt, world, opponent)
+  
     
 end
 
@@ -162,7 +157,7 @@ function Player:updatePunch(dt, world, opponent)
     end
 end
 
-function Player:checkDeath(cam)
+function Player:checkDeath(cam, gameState)
     local voidY = cam.y + love.graphics.getHeight() / 2 + 100
 
     if self.y > voidY then self.hp = self.hp - 1
@@ -172,6 +167,15 @@ function Player:checkDeath(cam)
             self.collider:setLinearVelocity(0, 0)
         end
     end
+
+    if self.hp <= 0  then
+        if self.player_number == 1 then
+            return "player2_win"
+        elseif self.player_number == 2 then
+            return "player1_win"
+        end
+    end
+
 end
 
 function Player:draw()
