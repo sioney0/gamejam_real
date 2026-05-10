@@ -20,7 +20,7 @@ function love.load()
     sti = require "libraries/sti"
     camera = require "libraries/camera"
     
-    cam = camera()
+    cam = camera() 
     anim8 = require "libraries/anim8"
     world = wf.newWorld(0, 800)
     world:addCollisionClass("Ground")
@@ -96,7 +96,7 @@ function love.update(dt)
 
     if gameState == "fighting" then 
     
-        cam:move(0, -5 * dt)
+        cam:move(0, -8 * dt)
         
 
         player_one:update(dt, world, player_two, cam)
