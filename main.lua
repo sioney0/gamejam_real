@@ -27,7 +27,7 @@ function love.load()
 
     world:addCollisionClass("Player")
 
-    gameMap = sti("maps/map26.lua")
+    gameMap = sti("maps/map27.lua")
     mapHeight = gameMap.height * gameMap.tileheight
     cam = camera()
     cam:lookAt(640, mapHeight - 360)
@@ -96,7 +96,7 @@ function love.update(dt)
 
     if gameState == "fighting" then 
     
-        cam:move(0, -8 * dt)
+        cam:move(0, -100 * dt)
         
 
         player_one:update(dt, world, player_two, cam)
