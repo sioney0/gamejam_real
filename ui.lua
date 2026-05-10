@@ -31,12 +31,12 @@ function ui:hearts()
     local scale = 1.5
     local spacing = 120
 
-    for i = 1, self.player_one.hp do
-        love.graphics.draw(self.blue_hearts, 30 + (i - 1) * spacing, 20, 0, scale, scale)
+    for i = 1, self.player_two.hp do
+        love.graphics.draw(self.red_hearts, 30 + (i - 1) * spacing, 20, 0, scale, scale)
     end
 
-    for i = 1, self.player_two.hp do
-        love.graphics.draw(self.red_hearts, love.graphics.getWidth() - (i * spacing),
+    for i = 1, self.player_one.hp do
+        love.graphics.draw(self.blue_hearts, love.graphics.getWidth() - (i * spacing),
             20,
             0,
             scale,
