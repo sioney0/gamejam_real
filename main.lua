@@ -83,12 +83,42 @@ function love.load()
 
 end
 
-      
+    
+function restartGame()
+    player_one.hp = 3
+    player_two.hp = 3
+
+    -- reset positions
+    player_one.collider:setPosition(player_one.spawnX, player_one.spawnY)
+    player_two.collider:setPosition(player_two.spawnX, player_two.spawnY)
+
+    -- reset velocities
+    player_one.collider:setLinearVelocity(0, 0)
+    player_two.collider:setLinearVelocity(0, 0)
+
+    -- reset camera
+    cam:lookAt(640, mapHeight - 360)
+
+    -- stop music
+    bgm:stop()
+
+    -- go back to menu
+    gameState = "menu"
+
+end
+
+
 function love.keypressed(key)
     if gameState == "menu" then
         gameState = "fighting"
         bgm:stop()
         bgm:play()
+    end
+
+    if gameState == "player1_win" or gameState == "player2_win" then
+        if key == "r" then
+            restartGame()
+        end
     end
 end
 
