@@ -27,7 +27,7 @@ function love.load()
 
     world:addCollisionClass("Player")
 
-    gameMap = sti("maps/map25.lua")
+    gameMap = sti("maps/map26.lua")
     mapHeight = gameMap.height * gameMap.tileheight
     cam = camera()
     cam:lookAt(640, mapHeight - 360)
@@ -121,9 +121,11 @@ function love.draw()
     if gameState == "menu" then
         gameMap:draw()
         love.graphics.setFont(bigFont)
+        love.graphics.printf("Player 1: arrowkey movement, P to punch", 0, 200, 1280, "center")
+        
         love.graphics.printf("TOWERED", 0, 300, 1280, "center")
         love.graphics.printf("PRESS ANY KEY TO START", 0, 600, 1280, "center")
-
+       
     elseif gameState == "fighting" then
         cam:attach()
         love.graphics.push()
