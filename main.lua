@@ -19,7 +19,7 @@ function love.load()
     wf = require "libraries/windfield" 
     sti = require "libraries/sti"
     camera = require "libraries/camera"
-
+    
     cam = camera() 
     anim8 = require "libraries/anim8"
     world = wf.newWorld(0, 800)
@@ -121,7 +121,8 @@ function love.draw()
     if gameState == "menu" then
         gameMap:draw()
         love.graphics.setFont(bigFont)
-        love.graphics.printf("PRESS ANY KEY TO START", 0, 300, 1280, "center")
+        love.graphics.printf("TOWERED", 0, 300, 1280, "center")
+        love.graphics.printf("PRESS ANY KEY TO START", 0, 600, 1280, "center")
 
     elseif gameState == "fighting" then
         cam:attach()
