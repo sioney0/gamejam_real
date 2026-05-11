@@ -155,19 +155,19 @@ function Player:update(dt, world, opponent, cam)
     end
 
     if self.player_number == 1 then
-        if love.keyboard.isDown("p") then
+        if love.keyboard.isDown("f") then
             self:punch(world)
         end
     elseif self.player_number == 2 then
-        if love.keyboard.isDown("f") then
+        if love.keyboard.isDown("p") then
             self:punch(world)
         end
     end
 
     -- For moving
-    if self.player_number == 1 then
+    if self.player_number == 2 then
         movePlayer(self, "left", "right", "up", "down")
-    elseif self.player_number == 2 then
+    elseif self.player_number == 1 then
         movePlayer(self, "a", "d", "w", "s")
     end
 
